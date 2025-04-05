@@ -184,3 +184,6 @@ class SkipGram(nn.Module):
         hidden_layer = self.input_to_hidden(X)  # 生成隐藏层：[batch_size, embedding_size]
         output_layer = self.hidden_to_output(hidden_layer)  # 生成输出层：[batch_size, voc_size]
         return output_layer
+
+X = torch.tensor([word_to_idx[target]], dtype=torch.long)  # 输入是中心词
+y_true = torch.tensor([word_to_idx[context]], dtype=torch.long)  # 目标词是周围词
