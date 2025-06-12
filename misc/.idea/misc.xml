@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisProjectProfileManager">
+    <option name="PROJECT_PROFILE" />
+    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
+    <list size="0" />
+  </component>
+  <component name="Black">
+    <option name="sdkName" value="Python 3.13" />
+  </component>
+  <component name="BspLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/akka/akka-http" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/apache/spark" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/cfmcgrady/delta" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/delta-io/delta" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/hayasshi/akka-http-router" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/scalaj/scalaj-http" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../../../../zyb/code/github.com/underscoreio/essential-macros" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13" project-jdk-type="Python SDK" />
+  <component name="ScalaSbtSettings">
+    <option name="customVMPath" />
+  </component>
+  <component name="SuppressionsComponent">
+    <option name="suppComments" value="[]" />
+  </component>
+</project>
