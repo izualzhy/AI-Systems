@@ -1,0 +1,30 @@
+{
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+                "content": "Thought: 我需要回答上海当前的天气情况，有工具get_current_weather可以获取城市当前天气，所以应该调用这个工具，输入地点“上海”。\nAction: get_current_weather\nAction Input: {\"location\": \"上海\"}",
+                "reasoning_content": "我现在需要回答用户的问题：“请问上海的天气怎么样？”首先，根据系统提示，我需要使用提供的工具来获取信息。用户的问题是关于当前天气的，所以应该使用get_current_weather工具，输入地点“上海”。接下来，我需要检查是否有必要重复这个过程，但显然一次调用就足够了。然后，根据返回的观察结果，整理成最终答案。现在开始执行：\n\n首先，Thought部分应该是意识到需要调用天气工具，因为问题是关于当前天气的，没有什么信息需要补充。然后Action是get_current_weather，输入上海。假设Observation会返回上海的当前天气情况，比如温度、天气状况等。最后，根据Observation得出Final Answer。",
+                "role": "assistant"
+            }
+        }
+    ],
+    "created": 1750327406,
+    "id": "02175032739914591e4c7a768aac04e33a807a31e0896347985e7",
+    "model": "doubao-seed-1-6-thinking-250615",
+    "service_tier": "default",
+    "object": "chat.completion",
+    "usage": {
+        "completion_tokens": 211,
+        "prompt_tokens": 158,
+        "total_tokens": 369,
+        "prompt_tokens_details": {
+            "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+            "reasoning_tokens": 158
+        }
+    }
+}

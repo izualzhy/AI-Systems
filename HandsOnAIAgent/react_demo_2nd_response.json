@@ -1,0 +1,30 @@
+{
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+                "content": "Thought: 我已经通过get_current_weather工具获取了上海当前的天气信息，观察结果显示上海今天天气晴，25°C，信息足够回答用户的问题。\nFinal Answer: 上海今天天气晴，气温25°C。",
+                "reasoning_content": "我现在需要处理用户的问题“请问上海的天气怎么样？”。首先，用户明确询问的是上海当前的天气情况，根据提供的工具，get_current_weather函数可以获取城市的当前天气，所以应该调用这个工具。之前的思考已经正确决定了调用该工具，并输入了“上海”作为地点，得到的观察结果是上海今天晴，25°C。现在需要确认是否已经获取了足够的信息来回答用户的问题。观察结果已经直接给出了天气状况和温度，没有缺少必要的信息，因此不需要进一步调用工具。接下来应该将结果整理成自然语言回答用户。",
+                "role": "assistant"
+            }
+        }
+    ],
+    "created": 1750327445,
+    "id": "0217503274393810f848b5e7d5cd90fc22435541affcfca65098c",
+    "model": "doubao-seed-1-6-thinking-250615",
+    "service_tier": "default",
+    "object": "chat.completion",
+    "usage": {
+        "completion_tokens": 188,
+        "prompt_tokens": 232,
+        "total_tokens": 420,
+        "prompt_tokens_details": {
+            "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+            "reasoning_tokens": 135
+        }
+    }
+}

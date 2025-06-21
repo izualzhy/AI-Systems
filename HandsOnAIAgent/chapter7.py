@@ -75,7 +75,7 @@ executor = load_agent_executor(model, tools, verbose=True)
 # 初始化Plan-and-Execute Agent
 agent = PlanAndExecute(planner=planner, executor=executor, verbose=True)
 # 运行Agent解决问题
-# agent.run("查查玫瑰的库存然后给出出货方案！")
+agent.run("查查玫瑰的库存然后给出出货方案！")
 
 """
 > Entering new PlanAndExecute chain...
@@ -211,7 +211,7 @@ Response: 当前玫瑰库存总数量为100，但缺少品种（颜色/类型）
 """
 
 # 运行Agent解决新问题（完善需求）
-agent.run("查查玫瑰花的库存然后给出50朵玫瑰花的价格和当天的配送方案！")
+# agent.run("查查玫瑰花的库存然后给出50朵玫瑰花的价格和当天的配送方案！")
 """
 > Entering new PlanAndExecute chain...
 steps=[Step(value='Check the current inventory of玫瑰花 to confirm if there are at least 50 units available.'), Step(value='If the inventory is sufficient (≥50), retrieve the pricing information for 50朵玫瑰花 (accounting for any bulk discounts or standard per-unit rates).'), Step(value='Retrieve the same-day delivery方案, including key details such as cut-off times for placing orders, available delivery slots, coverage areas, and any additional delivery fees.'), Step(value="Compile the inventory status, price for 50朵玫瑰花, and same-day delivery details to respond to the user's original question.\n<END_OF_PLAN>")]

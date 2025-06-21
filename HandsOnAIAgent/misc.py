@@ -3,7 +3,7 @@
 
 import os
 
-from langchain_openai import ChatOpenAI  # 用于调用OpenAI公司的GPT模型
+from langchain_openai import ChatOpenAI
 from openai import OpenAI
 
 from constants import CHAT_MODEL_ID, ARK_API_URL
@@ -25,6 +25,7 @@ def getChatOpenAI():
         model=CHAT_MODEL_ID,
         base_url=ARK_API_URL,
         api_key=os.environ.get("ARK_API_KEY"),
+        verbose=True
     )
 
     return model
