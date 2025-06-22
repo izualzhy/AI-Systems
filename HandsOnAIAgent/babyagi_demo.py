@@ -68,8 +68,8 @@ class TaskPrioritizationChain(LLMChain):
             " the following tasks: {task_names}."
             " Consider the ultimate objective of your team: {objective}."
             " Do not remove any tasks. Return the result as a numbered list, like:"
-            " #. First task"
-            " #. Second task"
+            " 1. First task"
+            " 2. Second task"
             " Start the task list with number {next_task_id}."
         )
         prompt = PromptTemplate(
@@ -105,16 +105,23 @@ def get_next_task(
         objective: str,
 ) -> List[Dict]:
     """Get the next task."""
+    log_print(f"get_next_task objective:{objective} task_description: {task_description}")
     incomplete_tasks = ", ".join(task_list)
-    print(f"get_next_task objective:{objective} incomplete_tasks: {incomplete_tasks}")
+    log_print(f"get_next_task \n\tresult: {result}")
+    log_print(f"get_next_task \n\ttask_description: {task_description}")
+    log_print(f"get_next_task \n\tincomplete_tasks: {incomplete_tasks}")
+    log_print(f"get_next_task \n\tobjective: {objective}")
     response = task_creation_chain.run(
         result=result,
         task_description=task_description,
         incomplete_tasks=incomplete_tasks,
         objective=objective,
     )
+    log_print(f"get_next_task \n\tresponse: {response}")
     new_tasks = response.split("\n")
-    print(f"get_next_task \n\tnew_tasks: {new_tasks}\n\tresponse: {response}")
+    log_print(f"get_next_task \n")
+    for t in new_tasks:
+        log_print(f"\t in new_task t: {t}")
     return [{"task_name": task_name} for task_name in new_tasks if task_name.strip()]
 # 设置任务优先级
 def prioritize_tasks(
@@ -126,13 +133,19 @@ def prioritize_tasks(
     """Prioritize tasks."""
     task_names = [t["task_name"] for t in task_list]
     next_task_id = int(this_task_id) + 1
+    log_print("prioritize_tasks")
+    for task_name in task_names:
+        log_print(f"prioritize_tasks task_name: {task_name}")
+    log_print(f"prioritize_tasks task_names: {task_names} next_task_id: {next_task_id} objective: {objective}")
     response = task_prioritization_chain.run(
         task_names=task_names, next_task_id=next_task_id, objective=objective
     )
+    log_print(f"prioritize_tasks response: {response}")
     new_tasks = response.split("\n")
-    print(f"prioritize_tasks \n\tnew_tasks: {new_tasks}\n\tresponse: {response}")
+    log_print(f"prioritize_tasks")
     prioritized_task_list = []
     for task_string in new_tasks:
+        log_print(f"\ttask_string: {task_string}")
         if not task_string.strip():
             continue
         task_parts = task_string.strip().split(".", 1)
@@ -144,10 +157,14 @@ def prioritize_tasks(
 # 获取头部任务
 def _get_top_tasks(vectorstore, query: str, k: int) -> List[str]:
     """Get the top k tasks based on the query."""
+    log_print(f'_get_top_tasks query: {query} k: {k}')
     results = vectorstore.similarity_search_with_score(query, k=k)
     if not results:
+        log_print(f'got no results from vectorstore')
         return []
     sorted_results, _ = zip(*sorted(results, key=lambda x: x[1], reverse=True))
+    for i in sorted_results:
+        log_print(f'_get_top_tasks item: {i}')
     return [str(item.metadata["task"]) for item in sorted_results]
 # 执行任务
 def execute_task(
@@ -155,8 +172,14 @@ def execute_task(
 ) -> str:
     """Execute a task."""
     context = _get_top_tasks(vectorstore, query=objective, k=k)
-    print(f"execute_task objective:{objective} context: {context} task: {task}")
+    log_print(f"execute_task objective:{objective} context: {context} task: {task}")
     return execution_chain.run(objective=objective, context=context, task=task)
+
+f = open("babyagi_round.out", "w")
+def log_print(*args, **kwargs):
+    print(*args, **kwargs)
+    print(*args, **kwargs, file=f)
+
 
 # BabyAGI 主类
 class BabyAGI(Chain, BaseModel):
@@ -172,48 +195,57 @@ class BabyAGI(Chain, BaseModel):
         """Configuration for this pydantic object."""
         arbitrary_types_allowed = True
     def add_task(self, task: Dict):
-        print(f"add_task task: {task}")
+        log_print(f"add_task task: {task}")
         self.task_list.append(task)
     def print_task_list(self):
-        print("\033[95m\033[1m" + "\n*****TASK LIST*****\n" + "\033[0m\033[0m")
+        log_print("\033[95m\033[1m" + "\n*****TASK LIST*****\n" + "\033[0m\033[0m")
         for t in self.task_list:
-            print(str(t["task_id"]) + ": " + t["task_name"])
+            log_print(str(t["task_id"]) + ": " + t["task_name"])
     def print_next_task(self, task: Dict):
-        print("\033[92m\033[1m" + "\n*****NEXT TASK*****\n" + "\033[0m\033[0m")
-        print(str(task["task_id"]) + ": " + task["task_name"])
+        log_print("\033[92m\033[1m" + "\n*****NEXT TASK*****\n" + "\033[0m\033[0m")
+        log_print(str(task["task_id"]) + ": " + task["task_name"])
     def print_task_result(self, result: str):
-        print("\033[93m\033[1m" + "\n*****TASK RESULT*****\n" + "\033[0m\033[0m")
-        print(result)
+        log_print("\033[93m\033[1m" + "\n*****TASK RESULT*****\n" + "\033[0m\033[0m")
+        log_print(result)
     @property
     def input_keys(self) -> List[str]:
         return ["objective"]
     @property
     def output_keys(self) -> List[str]:
         return []
+
     def _call(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         """Run the agent."""
         objective = inputs["objective"]
         first_task = inputs.get("first_task", "Make a todo list")
+        log_print(f"Running with objective: {objective} first_task: {first_task}")
         self.add_task({"task_id": 1, "task_name": first_task})
         num_iters = 0
+        global f
+
         while True:
+            if f:
+                f.close()
+            f = open(f"./babyagi_round_{num_iters}.out", "w")
+            log_print("current task in task_list")
             for i in self.task_list:
-                print(f"\ti : {i}")
+                log_print(f"\ti : {i}")
             if self.task_list:
                 self.print_task_list()
                 # 第1步：获取第一个任务
                 task = self.task_list.popleft()
+                log_print(f"we got a task: {task}")
                 self.print_next_task(task)
                 # 第2步：执行任务
                 result = execute_task(
                     self.vectorstore, self.execution_chain, objective, task["task_name"]
                 )
-                print(f"current task: {task}")
+                log_print(f"current task: {task}")
                 this_task_id = int(task["task_id"])
                 self.print_task_result(result)
                 # 第3步：将结果存储到向量数据库中
                 result_id = f"result_{task['task_id']}_{num_iters}"
-                print(f"\nAdding {result_id} to vectorstore as result of: {task['task_name']}")
+                log_print(f"add_texts to vectorstore...\n\ttexts=[{result}]\n\tmetadatas:{[{"task": task["task_name"]}]}\n\tids=[{result_id}]")
                 self.vectorstore.add_texts(
                     texts=[result],
                     metadatas=[{"task": task["task_name"]}],
@@ -239,9 +271,14 @@ class BabyAGI(Chain, BaseModel):
                         objective,
                     )
                 )
+                log_print("tasks after priority:")
+                for t in self.task_list:
+                    log_print(f"\ttask: {t}")
             num_iters += 1
+            f.close()
+            f = open(f"./babyagi_round_{num_iters}.out", "w")
             if self.max_iterations is not None and num_iters == self.max_iterations:
-                print(
+                log_print(
                     "\033[91m\033[1m" + "\n*****TASK ENDING*****\n" + "\033[0m\033[0m"
                 )
                 break
