@@ -9,7 +9,7 @@ import numpy as np
 from volcenginesdkarkruntime import Ark
 
 from constants import EMBEDDINGS_MODEL_ID, CHAT_MODEL_ID
-from misc import getArkClient
+from misc import getArkClient, encode
 
 client = Ark(api_key=os.environ.get("ARK_API_KEY"))
 
@@ -23,15 +23,6 @@ def test():
         encoding_format="float",
     )
     print(resp)
-
-def encode(documents):
-    resp = client.embeddings.create(
-        model=EMBEDDINGS_MODEL_ID,
-        input=documents,
-        encoding_format="float",
-    )
-    vectors = [np.array(e.embedding, dtype=np.float32) for e in resp.data]
-    return vectors
 
 def demo():
     documents = [
