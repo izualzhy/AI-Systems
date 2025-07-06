@@ -18,7 +18,7 @@ from langchain_community.vectorstores import FAISS
 from pydantic import BaseModel, Field
 
 from doubao_embedding import DoubaoEmbedding
-from misc import getChatOpenAI
+from misc import getDoubaoSeed16Thinking
 
 # 定义嵌入模型
 doubao_embedding = DoubaoEmbedding()
@@ -45,6 +45,10 @@ class TaskCreationChain(LLMChain):
             " Based on the result, create new tasks to be completed"
             " by the AI system that do not overlap with incomplete tasks."
             " Return the tasks as an array."
+            "**Important constraints:**  "
+            "- Each task must be written in Chinese.  "
+            "- **Each task should be concise and no longer than 10 Chinese characters.**  "
+            "- Avoid overlapping content with any existing incomplete tasks."
         )
         prompt = PromptTemplate(
             template=task_creation_template,
@@ -70,7 +74,12 @@ class TaskPrioritizationChain(LLMChain):
             " Do not remove any tasks. Return the result as a numbered list, like:"
             " 1. First task"
             " 2. Second task"
-            " Start the task list with number {next_task_id}."
+            "**Important:**  "
+            "- Start the task list with number **{next_task_id}**.  "
+            "- Each subsequent task must increment the number by **1** (i.e., strictly increasing by 1).  "
+            "- Do **not** skip or reuse numbers."
+            ""
+            "Only return the final cleaned and renumbered list."
         )
         prompt = PromptTemplate(
             template=task_prioritization_template,
@@ -89,6 +98,8 @@ class ExecutionChain(LLMChain):
             " Take into account these previously completed tasks: {context}."
             " Your task: {task}."
             " Response:"
+            "**Please keep the response as concise and direct as possible.**"
+            "Avoid unnecessary explanations, verbose descriptions, or redundant phrasing."
         )
         prompt = PromptTemplate(
             template=execution_template,
@@ -119,9 +130,9 @@ def get_next_task(
     )
     log_print(f"get_next_task \n\tresponse: {response}")
     new_tasks = response.split("\n")
-    log_print(f"get_next_task \n")
+    log_print(f"get_next_task, parse new_tasks from response, new_tasks:")
     for t in new_tasks:
-        log_print(f"\t in new_task t: {t}")
+        log_print(f"\tnew_task: {t}")
     return [{"task_name": task_name} for task_name in new_tasks if task_name.strip()]
 # 设置任务优先级
 def prioritize_tasks(
@@ -180,6 +191,18 @@ def log_print(*args, **kwargs):
     print(*args, **kwargs)
     print(*args, **kwargs, file=f)
 
+def dump_vector_store():
+    log_print("dump_vector_store")
+    data = {}
+    i = 1
+    for doc_id in vectorstore.index_to_docstore_id.values():
+        doc = vectorstore.docstore.search(doc_id)
+        data[doc_id] = doc
+        log_print(f"\ti: {i}")
+        log_print(f"\t\tdoc_id: {doc_id}")
+        log_print(f"\t\tcontent: {doc.page_content}")
+        log_print(f"\t\tmetadata: {doc.metadata}")
+        i += 1
 
 # BabyAGI 主类
 class BabyAGI(Chain, BaseModel):
@@ -227,6 +250,7 @@ class BabyAGI(Chain, BaseModel):
             if f:
                 f.close()
             f = open(f"./babyagi_round_{num_iters}.out", "w")
+            log_print("\n" + "-" * 16 + f"Running loop: {num_iters}" + "-" * 16 + "\n")
             log_print("current task in task_list")
             for i in self.task_list:
                 log_print(f"\ti : {i}")
@@ -274,12 +298,13 @@ class BabyAGI(Chain, BaseModel):
                 log_print("tasks after priority:")
                 for t in self.task_list:
                     log_print(f"\ttask: {t}")
+                dump_vector_store()
             num_iters += 1
             f.close()
             f = open(f"./babyagi_round_{num_iters}.out", "w")
             if self.max_iterations is not None and num_iters == self.max_iterations:
                 log_print(
-                    "\033[91m\033[1m" + "\n*****TASK ENDING*****\n" + "\033[0m\033[0m"
+                    f"\033[91m\033[1m" + "\n*****TASK ENDING {num_iters} {self.max_iterations}*****\n" + "\033[0m\033[0m"
                 )
                 break
         return {}
@@ -304,7 +329,7 @@ class BabyAGI(Chain, BaseModel):
 # 主函数执行部分
 if __name__ == "__main__":
     OBJECTIVE = "分析一下北京市今天的天气，写出花卉存储策略"
-    llm = getChatOpenAI()
+    llm = getDoubaoSeed16Thinking()
     verbose = False
     max_iterations: Optional[int] = 6
     baby_agi = BabyAGI.from_llm(llm=llm, vectorstore=vectorstore,

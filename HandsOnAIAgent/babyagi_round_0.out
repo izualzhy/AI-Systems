@@ -1,0 +1,17 @@
+
+----------------Running loop: 0----------------
+
+current task in task_list
+	i : {'task_id': 1, 'task_name': 'Make a todo list'}
+[95m[1m
+*****TASK LIST*****
+[0m[0m
+1: Make a todo list
+we got a task: {'task_id': 1, 'task_name': 'Make a todo list'}
+[92m[1m
+*****NEXT TASK*****
+[0m[0m
+1: Make a todo list
+_get_top_tasks query: 分析一下北京市今天的天气，写出花卉存储策略 k: 5
+got no results from vectorstore
+execute_task objective:分析一下北京市今天的天气，写出花卉存储策略 context: [] task: Make a todo list

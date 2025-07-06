@@ -8,7 +8,7 @@ import faiss
 import numpy as np
 from volcenginesdkarkruntime import Ark
 
-from constants import EMBEDDINGS_MODEL_ID, CHAT_MODEL_ID
+from constants import EMBEDDINGS_MODEL_ID, DOUBAO_SEED_1_6_THINKING
 from misc import getArkClient, encode
 
 client = Ark(api_key=os.environ.get("ARK_API_KEY"))
@@ -61,7 +61,7 @@ def demo():
     print("prompt: " + prompt)
     # 调用大模型生成答案（以 GPT 为例）
     response = getArkClient().chat.completions.create(
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3,
     )
