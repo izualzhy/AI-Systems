@@ -2,7 +2,7 @@
 # coding=utf-8
 import json
 
-from constants import CHAT_MODEL_ID
+from constants import DOUBAO_SEED_1_6_THINKING
 from misc import getArkClient
 
 
@@ -27,7 +27,7 @@ print(get_encouragement("小雪", "tired"))
 def function_call_mood():
     response = client.chat.completions.create(
         # 指定您创建的方舟推理接入点 ID，此处已帮您修改为您的推理接入点 ID
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[
             {
                 "role": "user",
@@ -102,7 +102,7 @@ def function_call_flower_inventory():
     print("message:", messages)
     # 第一次对话响应
     first_response = client.chat.completions.create(
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=messages,
         tools=tools,
         tool_choice="auto"
@@ -136,7 +136,7 @@ def function_call_flower_inventory():
 
     # 第二次向大模型发送对话以获取最终响应
     second_response = client.chat.completions.create(
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=messages
     )
     # 打印最终响应

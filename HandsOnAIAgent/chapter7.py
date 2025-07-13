@@ -12,7 +12,7 @@ from langchain_experimental.plan_and_execute import (
 # 设置OpenAI网站和SerpApi网站提供的API密钥
 from dotenv import load_dotenv  # 用于加载环境变量
 
-from misc import getChatOpenAI
+from misc import getDoubaoSeed16Thinking
 
 load_dotenv()  # 加载.env文件中的环境变量
 # 导入LangChain 工具
@@ -67,7 +67,7 @@ os.environ["HTTP_PROXY"] = "http://127.0.0.1:1087"
 os.environ["HTTPS_PROXY"] = "http://127.0.0.1:1087"
 
 # 设置大模型
-model = getChatOpenAI()
+model = getDoubaoSeed16Thinking()
 # 设置计划者和执行者
 from langchain_experimental.plan_and_execute import PlanAndExecute, load_agent_executor, load_chat_planner
 planner = load_chat_planner(model)

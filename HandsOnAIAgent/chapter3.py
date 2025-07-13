@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from constants import CHAT_MODEL_ID, IMAGE_MODEL_ID
+from constants import DOUBAO_SEED_1_6_THINKING, IMAGE_MODEL_ID
 from misc import getArkClient
 
 client = getArkClient()
@@ -9,7 +9,7 @@ client = getArkClient()
 def chat_demo():
   response = client.chat.completions.create(
     # 指定您创建的方舟推理接入点 ID，此处已帮您修改为您的推理接入点 ID
-    model=CHAT_MODEL_ID,
+    model=DOUBAO_SEED_1_6_THINKING,
     response_format={"type": "json_object"},
     messages=[
       {"role": "system", "content": "您是一个帮助用户了解鲜花信息的智能助手，并能够输出JSON格式的内容。"},

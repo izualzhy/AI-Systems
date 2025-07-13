@@ -5,9 +5,9 @@
 # 初始化大模型
 from openai import OpenAI
 
-from misc import getArkClient, getChatOpenAI
+from misc import getArkClient, getDoubaoSeed16Thinking
 
-llm = getChatOpenAI()
+llm = getDoubaoSeed16Thinking()
 
 # 设置工具
 # from langchain.agents import load_tools

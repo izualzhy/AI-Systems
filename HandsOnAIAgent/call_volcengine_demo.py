@@ -4,7 +4,7 @@
 
 import os
 
-from constants import CHAT_MODEL_ID
+from constants import DOUBAO_SEED_1_6_THINKING
 from misc import getArkClient
 
 print(os.environ.get("OPENAI_API_KEY"))
@@ -40,7 +40,7 @@ def test():
 def call_function():
     response = client.chat.completions.create(
         # 创建一个函数调用，指定函数名称和参数
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[
             {
                 "role": "system",
@@ -73,7 +73,7 @@ def call_function():
 
 def call_react_1st():
     response = client.chat.completions.create(
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[
             {
                 "role": "user",
@@ -89,7 +89,7 @@ def call_react_1st():
 
 def call_react_2nd():
     response = client.chat.completions.create(
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[
             {
                 "role": "user",
@@ -107,7 +107,7 @@ def call_function_v2():
     """not worked currently."""
     response = client.chat.completions.create(
         # 创建一个函数调用，指定函数名称和参数
-        model=CHAT_MODEL_ID,
+        model=DOUBAO_SEED_1_6_THINKING,
         messages=[
             {
                 "role": "system",
@@ -130,6 +130,50 @@ def call_function_v2():
         # tools =[
         functions = [
         {
+                "name": "get_current_weather",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["location"]
+                },
+                "description": "获取城市当前天气"
+            }
+        ],
+        stream=False
+    )
+
+    print(response)
+    print(response.choices[0])
+
+def call_camel_agents_demo():
+    response = client.chat.completions.create(
+        # 创建一个函数调用，指定函数名称和参数
+        model=DOUBAO_SEED_1_6_THINKING,
+        messages=[
+            {
+                "role": "system",
+                "content": "你是 花店营销专员，我是 花店老板。我们各自扮演固定角色，不得互换。\n\n我们在完成以下任务方面有共同目标：\n任务是：策划夏季茉莉夜营销：布置、互动、促销、推广方案。\n\n你必须始终根据我的指令提供帮助，且每次仅回应一个具体、可行的解决方案。必须符合以下要求：\n\n1. 不得反过来指示我；\n2. 不得提出任何问题；\n3. 不得提供与指令无关的内容；\n4. 不得生成错误或无法执行的方案，如遇物理、道德、法律或能力限制，应明确拒绝并解释原因；\n5. 必须给出回复\n6. 回复必须使用陈述句和现在时态；\n7. 回复结构必须如下：\n\n解决方案：<YOUR_SOLUTION>  \n<YOUR_SOLUTION> 应该是具体实现，包括推荐方法与例子。  \n始终以 “下一个请求。” 结尾。\n\n除非我明确告知任务已完成，你始终应按上述格式回应。"
+            },
+            {
+                "role": "user",
+                "content": "现在开始逐一给我介绍。只回复指令和输入。"
+            }
+        ],
+        # functions=[
+        #     {
+        #         "name": "get_current_weather",
+        #         "parameters": {
+        #             "location": "上海"  # 补全location参数（原JSON中未填写，需手动补充）
+        #         }
+        #     }
+        # ],
+        # tools =[
+        functions = [
+            {
                 "name": "get_current_weather",
                 "parameters": {
                     "type": "object",

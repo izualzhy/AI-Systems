@@ -5,7 +5,7 @@
 # 导入环境变量
 from dotenv import load_dotenv
 
-from constants import CHAT_MODEL_ID
+from constants import DOUBAO_SEED_1_6_THINKING
 from misc import getArkClient
 
 load_dotenv()
@@ -17,7 +17,7 @@ assistant = client.beta.assistants.create(
     name="鲜花价格计算器",
     instructions="你能够帮我计算鲜花的价格",
     tools=[{"type": "code_interpreter"}],
-    model=CHAT_MODEL_ID
+    model=DOUBAO_SEED_1_6_THINKING
 )
 # 打印assistant
 print(assistant)
