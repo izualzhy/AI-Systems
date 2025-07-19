@@ -9,7 +9,7 @@ from langchain_core.prompts.structured import StructuredPrompt
 
 
 
-from misc import getChatOpenAI
+from misc import getDoubaoSeed16Thinking
 
 
 @tool
@@ -19,7 +19,7 @@ def get_current_weather(location: str) -> str:
 
 print(get_current_weather.description)
 
-llm = getChatOpenAI()
+llm = getDoubaoSeed16Thinking()
 
 def custom_fc():
     from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate

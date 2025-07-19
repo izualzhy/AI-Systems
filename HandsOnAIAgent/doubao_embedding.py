@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 import os
-from typing import List
 
-from langchain_community.vectorstores.faiss import FAISS
-from langchain.docstore.in_memory import InMemoryDocstore
-import faiss
-import numpy as np
 from langchain_core.embeddings import Embeddings
 from volcenginesdkarkruntime import Ark
 
 from constants import EMBEDDINGS_MODEL_ID
-from misc import encode
 
 
 class DoubaoEmbedding(Embeddings):
