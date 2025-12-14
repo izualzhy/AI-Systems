@@ -1,0 +1,3 @@
+[submodule "BOOK_LLMs-from-scratch/LLMs-from-scratch"]
+	path = BOOK_LLMs-from-scratch/LLMs-from-scratch
+	url = https://github.com/rasbt/LLMs-from-scratch.git
