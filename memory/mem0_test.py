@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from mem0 import Memory
 
-from misc.util import DEEPSEEK_V32
+from utils.util import DEEPSEEK_V32
 
 #mem0 configuration
 

@@ -30,16 +30,30 @@ ark_seed20_model = LiteLlm(
     api_base=os.environ["ARK_API_URL"]
 )
 
+ark_glm47_model = LiteLlm(
+    model=os.environ["ARK_GLM47_WITH_PROVIDER"],
+    api_key=os.environ["ARK_API_KEY"],
+    api_base=os.environ["ARK_API_URL"]
+)
+
+ark_db15_lite_32k_model = LiteLlm(
+    model=os.environ["ARK_DB_15LITE_32K_WITH_PROVIDER"],
+    api_key=os.environ["ARK_API_KEY"],
+    api_base=os.environ["ARK_API_URL"]
+)
+
 def log_before_call_llm(callback_context: CallbackContext, llm_request: LlmRequest) -> Optional[LlmResponse]:
     print(f"\n====== --- 发送给模型的请求 ---\n")
     print(f"\n====== callback_context\n: {callback_context}")
     print(f"\n====== llm_request\n：{llm_request}")
+    print(f"\n===============================")
 
     return None # 返回 None 表示继续正常执行
 
 def log_after_call_llm(callback_context: CallbackContext, llm_response: LlmResponse) -> Optional[LlmResponse]:
-    print(f"--- 模型返回的响应 ---")
-    print(f"callback_context: {callback_context}")
-    print(f"llm_response：{llm_response}")
+    print(f"\n====== --- 模型返回的响应 ---")
+    print(f"\n====== callback_context\n: {callback_context}")
+    print(f"\n====== llm_response\n：{llm_response}")
+    print(f"\n===============================")
 
     return None

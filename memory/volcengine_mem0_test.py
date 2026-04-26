@@ -1,11 +1,11 @@
+import json
 import os
-import sys
+import time
 
 import httpx
-from mem0 import MemoryClient
-import json
-import time
 import requests
+from mem0 import MemoryClient
+
 
 def check_job_status(host: str, api_key: str, event_id: str, max_retries: int = 300):
     # 轮询任务状态直到 SUCCEEDED
@@ -61,9 +61,25 @@ messages = [
 print("===================异步添加记忆===============================")
 ret = m.add(messages, user_id=user_id, async_mode=True)
 print(json.dumps(ret, ensure_ascii=False))
-check_job_status(host, api_key, event_id=ret["results"][0]["event_id"])
 
-time.sleep(5)
+input("Press Enter to continue...")
+
+messages = [
+    {"role": "assistant", "content": "你好呀！能先告诉我你叫什么名字吗？"},
+    {"role": "user", "content": "我叫白给。今年31岁了。"},
+]
+ret = m.add(messages, user_id=user_id, async_mode=True)
+print(json.dumps(ret, ensure_ascii=False))
+
+input("Press Enter to continue...")
+
+messages = [
+    {"role": "user", "content": "我打算明天从亦庄搬到海淀。"},
+]
+ret = m.add(messages, user_id=user_id, async_mode=True)
+print(json.dumps(ret, ensure_ascii=False))
+
+input("Press Enter to continue...")
 
 print("===================获取全部记忆===============================")
 all_memories = m.get_all(user_id=user_id)
@@ -99,7 +115,6 @@ for item in relevant_memories["results"]:
     print(json.dumps(response, ensure_ascii=False))
 
 print("===================删除所有记忆===============================")
-time.sleep(5)
 response = m.delete_all(user_id=user_id)
 print(json.dumps(response, ensure_ascii=False))
 

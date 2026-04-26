@@ -1,0 +1,21 @@
+extensions:
+  jaeger_storage:
+    backends:
+      memory:
+        memory:
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  jaeger_storage_exporter:
+
+service:
+  extensions: [jaeger_storage]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [jaeger_storage_exporter]

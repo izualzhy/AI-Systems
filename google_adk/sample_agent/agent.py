@@ -9,6 +9,11 @@ from google_adk.adk_utils import ark_ds_model, log_before_call_llm
 
 def get_weather(city: str) -> dict:
     """Returns the weather in a specified city."""
+    print(f'=========== {os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"]}')
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+
+    exporter = OTLPSpanExporter()
+    print(f"=========== Exporter actual endpoint: {exporter._endpoint}")   # 打印实际使用的 endpoint
     return {"status": "success", "city": city, "weather": "晴，31 度"}
 
 def test_before_call_llm(callback_context: CallbackContext, llm_request: LlmRequest) -> Optional[LlmResponse]:
@@ -35,7 +40,7 @@ weather_agent = Agent(
     before_model_callback=test_before_call_llm,
     after_model_callback=test_after_call_llm
 )
-# root_agent = weather_agent
+root_agent = weather_agent
 
 from typing import Literal
 from pydantic import BaseModel, Field
@@ -62,4 +67,4 @@ book_recommendation_agent = Agent(
     after_model_callback=test_after_call_llm,
 )
 
-root_agent = book_recommendation_agent
+# root_agent = book_recommendation_agent

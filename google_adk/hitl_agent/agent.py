@@ -6,7 +6,8 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.tools import FunctionTool, ToolContext
 import asyncio
 
-from google_adk.adk_utils import ark_ds_model, log_after_call_llm, log_before_call_llm, silicon_ds_model
+from google_adk.adk_utils import ark_ds_model, log_after_call_llm, log_before_call_llm, silicon_ds_model, \
+    ark_db20_code_model, ark_glm47_model, ark_db15_lite_32k_model
 from google_adk.adk_instructions import (
     get_hitl_initial_writer_instruction,
     get_hitl_story_branch_instruction,
@@ -18,7 +19,10 @@ from pydantic import BaseModel, Field
 CURRENT_STORY = "current_story"
 CURRENT_BRANCH = "current_branch"
 
-CHAT_MODEL = ark_ds_model
+CHAT_MODEL = ark_db15_lite_32k_model
+
+import litellm
+litellm._turn_on_debug()
 
 class StoryBranch(BaseModel):
     """故事情节分支选项"""

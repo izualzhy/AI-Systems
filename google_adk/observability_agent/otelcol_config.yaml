@@ -1,0 +1,39 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4319
+      http:
+        endpoint: 0.0.0.0:11800
+
+# 处理器：简单的批处理，防止日志刷屏太快
+processors:
+  batch:
+
+# 导出器：debug 表示直接在控制台打印日志
+exporters:
+  debug:
+    verbosity: detailed  # 详细模式，能看到具体数据内容
+  otlp:
+    endpoint: 127.0.0.1:4317
+    tls:
+      insecure: true
+
+# 禁用 Prometheus 导出器以避免端口冲突
+service:
+  telemetry:
+    metrics:
+      level: none
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, otlp]
